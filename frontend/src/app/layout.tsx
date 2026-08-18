@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     "Short Video Creator",
     "TikTok Automation",
     "YouTube Shorts Generator",
-    "MoneyPrinterTurbo",
+    "ShortsMania",
     "Text to Video AI",
     "Edge-TTS Subtitles",
     "Auto Captions AI",

@@ -117,7 +117,7 @@ export default function DashboardPage() {
       <section className="relative flex flex-col items-center text-center space-y-6 pt-6">
         <div className="inline-flex items-center gap-2 rounded-full border border-purple-500/30 bg-purple-500/10 px-4 py-1.5 text-xs font-semibold text-purple-300 backdrop-blur-md">
           <Sparkles className="h-3.5 w-3.5" />
-          <span>MoneyPrinterTurbo Full-Stack Edition</span>
+          <span>ShortsmaniaTurbo Full-Stack Edition</span>
         </div>
 
         <h1 className="max-w-4xl text-4xl font-extrabold tracking-tight text-white sm:text-6xl sm:leading-[1.15]">
