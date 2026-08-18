@@ -1,0 +1,29 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7C3AED" />
+      <stop offset="50%" stop-color="#4F46E5" />
+      <stop offset="100%" stop-color="#06B6D4" />
+    </linearGradient>
+    <linearGradient id="sparkleGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFF066" />
+      <stop offset="100%" stop-color="#FFB800" />
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#7C3AED" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+
+  <!-- Squircle Base with Glow -->
+  <rect x="4" y="4" width="56" height="56" rx="16" fill="url(#bgGrad)" filter="url(#glow)"/>
+  
+  <!-- Subtle Inner Border Highlight -->
+  <rect x="4.5" y="4.5" width="55" height="55" rx="15.5" stroke="white" stroke-opacity="0.25" stroke-width="1"/>
+
+  <!-- Play Symbol -->
+  <path d="M24 20L44 32L24 44V20Z" fill="white" stroke="white" stroke-width="1.5" stroke-linejoin="round"/>
+
+  <!-- Sparkle Accent Symbol -->
+  <path d="M46 12L47.5 16.5L52 18L47.5 19.5L46 24L44.5 19.5L40 18L44.5 16.5L46 12Z" fill="url(#sparkleGrad)"/>
+  <circle cx="20" cy="16" r="2" fill="#38BDF8" fill-opacity="0.9"/>
+</svg>

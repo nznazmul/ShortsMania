@@ -6,6 +6,14 @@ export const metadata: Metadata = {
   title: "ShortsMania - AI-Powered Automated Short Video Generator",
   description:
     "Generate viral, high-retention short videos for TikTok, YouTube Shorts, and Instagram Reels with AI scriptwriting, neural voiceovers, stock footage, and styled karaoke captions.",
+  icons: {
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
+    apple: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
+  },
 };
 
 export default function RootLayout({
