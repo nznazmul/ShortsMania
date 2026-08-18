@@ -1,4 +1,4 @@
-# 🚀 ShortsMania (MoneyPrinterTurbo Full-Stack Edition)
+# 🚀 ShortsMania (Turbo Full-Stack Edition)
 
 > **AI-Powered Automated Short Video Generator Web Application**
 > Build viral, high-retention videos for **TikTok, YouTube Shorts, and Instagram Reels** with automated scriptwriting, neural voice synthesis, stock footage matching, and styled karaoke typography.
