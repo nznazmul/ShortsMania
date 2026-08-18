@@ -56,6 +56,8 @@ class MediaService:
         orientation = "portrait" if aspect == "9:16" else "landscape"
         search_query = " ".join(keywords[:2]) if keywords else "cinematic dark abstract"
 
+        error_context = []
+        
         # 1. Try Pexels API if key provided
         if self.pexels_key:
             try:
@@ -67,6 +69,7 @@ class MediaService:
                     if os.path.exists(output_path):
                         os.remove(output_path)
             except Exception as e:
+                error_context.append(f"Pexels failed ({type(e).__name__}: {e})")
                 logger.warning(f"Pexels footage search failed: {e}. Falling back...")
                 if os.path.exists(output_path):
                     os.remove(output_path)
@@ -82,13 +85,14 @@ class MediaService:
                     if os.path.exists(output_path):
                         os.remove(output_path)
             except Exception as e:
+                error_context.append(f"Pixabay failed ({type(e).__name__}: {e})")
                 logger.warning(f"Pixabay footage search failed: {e}. Falling back...")
                 if os.path.exists(output_path):
                     os.remove(output_path)
 
         # 3. Procedural Motion Background Generator (Offline Fallback Engine)
         logger.info(f"Generating procedural motion visual for scene {scene_index}")
-        return self._generate_procedural_background(duration, aspect, output_path, scene_index)
+        return self._generate_procedural_background(duration, aspect, output_path, scene_index, " | ".join(error_context))
 
     async def _search_and_download_pexels(self, query: str, orientation: str, output_path: str, min_duration: float) -> bool:
         url = "https://api.pexels.com/videos/search"
@@ -182,7 +186,8 @@ class MediaService:
         duration: float,
         aspect: VideoAspectType,
         output_path: str,
-        seed: int = 1
+        seed: int = 1,
+        error_context: str = ""
     ) -> str:
         """
         Uses FFmpeg filters to render an aesthetically rich dynamic gradient background.
@@ -240,10 +245,10 @@ class MediaService:
                 subprocess.run(simple_cmd, check=True, timeout=15)
         except Exception as e:
             logger.error(f"Failed to generate procedural video: {e}")
-            raise RuntimeError(f"Procedural video generator failed to create footage for scene {seed}. Please add a Pexels or Pixabay API key.")
+            raise RuntimeError(f"Procedural generation failed for scene {seed}. Context: {error_context}")
 
         if not os.path.exists(output_path) or os.path.getsize(output_path) < 1000:
-            raise RuntimeError(f"Procedural video generator output was empty or invalid for scene {seed}. The server might be out of memory.")
+            raise RuntimeError(f"Server ran out of memory generating scene {seed}. Context: {error_context}")
             
         return output_path
 
