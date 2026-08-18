@@ -49,7 +49,7 @@ class VideoEngine:
         ]
 
         logger.info(f"Normalizing scene clip: {' '.join(cmd)}")
-        res = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=60)
+        res = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=300)
         if res.returncode != 0:
             logger.error(f"FFmpeg error normalizing scene clip: {res.stderr}")
             raise RuntimeError(f"FFmpeg normalization failed: {res.stderr}")
@@ -76,7 +76,7 @@ class VideoEngine:
         ]
 
         logger.info(f"Concatenating {len(clip_paths)} clips...")
-        res = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=60)
+        res = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=120)
         if res.returncode != 0:
             logger.error(f"FFmpeg error concatenating clips: {res.stderr}")
             raise RuntimeError(f"FFmpeg concat failed: {res.stderr}")
@@ -110,7 +110,7 @@ class VideoEngine:
         ]
 
         try:
-            subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True, timeout=20)
+            subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True, timeout=60)
         except Exception as e:
             logger.warning(f"Procedural BGM generation fallback failed: {e}")
 
@@ -176,7 +176,7 @@ class VideoEngine:
         ]
 
         logger.info(f"Executing final render pipeline: {' '.join(cmd)}")
-        res = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=180)
+        res = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=600)
         if res.returncode != 0:
             logger.warning(f"Primary render with subtitles failed: {res.stderr}. Retrying without subtitle burn...")
             simple_filter = (
@@ -196,7 +196,7 @@ class VideoEngine:
                 "-shortest",
                 output_final_path
             ]
-            subprocess.run(fallback_cmd, check=True, timeout=120)
+            subprocess.run(fallback_cmd, check=True, timeout=300)
 
         return output_final_path
 
