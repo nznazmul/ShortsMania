@@ -105,6 +105,14 @@ class MediaService:
             res.raise_for_status()
             data = res.json()
             videos = data.get("videos", [])
+            
+            if not videos:
+                logger.info(f"Pexels found 0 results for '{query}'. Trying fallback query...")
+                params["query"] = "nature cinematic abstract"
+                res = await client.get(url, headers=headers, params=params)
+                res.raise_for_status()
+                videos = res.json().get("videos", [])
+                
             if not videos:
                 return False
 
@@ -145,6 +153,14 @@ class MediaService:
             res = await client.get(url, params=params)
             res.raise_for_status()
             hits = res.json().get("hits", [])
+            
+            if not hits:
+                logger.info(f"Pixabay found 0 results for '{query}'. Trying fallback query...")
+                params["q"] = "nature abstract background"
+                res = await client.get(url, params=params)
+                res.raise_for_status()
+                hits = res.json().get("hits", [])
+                
             if not hits:
                 return False
 
