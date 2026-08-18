@@ -85,7 +85,7 @@ async def test_api_key(provider: str, api_key: str):
                 return {"valid": False, "provider": provider, "message": f"Pexels Error: {res.text}"}
 
         elif provider == "elevenlabs":
-            url = "https://api.elevenlabs.io/v1/user"
+            url = "https://api.elevenlabs.io/v1/voices"
             headers = {"xi-api-key": api_key}
             async with httpx.AsyncClient(timeout=10.0) as client:
                 res = await client.get(url, headers=headers)
