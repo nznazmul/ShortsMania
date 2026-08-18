@@ -25,7 +25,8 @@ class VideoEngine:
         """
         Scales, center-crops, and standardizes a video clip to target resolution and duration.
         """
-        width, height = (1080, 1920) if aspect == "9:16" else (1920, 1080)
+        # Reduced to 720p to prevent RAM crashes on Render Free Tier
+        width, height = (720, 1280) if aspect == "9:16" else (1280, 720)
         Path(output_clip_path).parent.mkdir(parents=True, exist_ok=True)
 
         vf_filter = (

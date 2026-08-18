@@ -13,6 +13,7 @@ interface LiveProgressModalProps {
 
 export function LiveProgressModal({ task, isOpen, onClose }: LiveProgressModalProps) {
   const router = useRouter();
+  const apiOrigin = (process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000/api/v1").replace(/\/api\/v1\/?$/, "");
 
   if (!isOpen || !task) return null;
 
@@ -30,7 +31,7 @@ export function LiveProgressModal({ task, isOpen, onClose }: LiveProgressModalPr
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-4 backdrop-blur-xl animate-fadeIn">
-      <div className="relative w-full max-w-3xl overflow-hidden rounded-3xl border border-white/[0.1] bg-[#0c0c14] p-6 sm:p-8 shadow-2xl space-y-6">
+      <div className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto rounded-3xl border border-white/[0.1] bg-[#0c0c14] p-6 sm:p-8 shadow-2xl space-y-6 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-white/[0.08] pb-4">
           <div className="flex items-center gap-3">
@@ -120,7 +121,7 @@ export function LiveProgressModal({ task, isOpen, onClose }: LiveProgressModalPr
         {isCompleted && (
           <div className="flex flex-col sm:flex-row items-center justify-end gap-3 pt-2">
             <a
-              href={`http://127.0.0.1:8000${task.video_url}`}
+              href={`${apiOrigin}${task.video_url}`}
               download
               className="flex w-full sm:w-auto items-center justify-center gap-2 rounded-xl border border-white/[0.1] bg-white/[0.04] px-5 py-3 text-sm font-semibold text-zinc-200 transition hover:bg-white/[0.08] hover:text-white"
             >

@@ -72,6 +72,19 @@ npm run dev
 docker-compose up --build
 ```
 
+### 4. Live Deployment (Vercel & Render)
+
+**Backend (Render.com):**
+1. Create a New Web Service connected to this GitHub repo.
+2. Clear the `Root Directory` field.
+3. Set `Dockerfile Path` to exactly `Dockerfile.backend`.
+4. Add Environment Variables (e.g., `GEMINI_API_KEY`, `PEXELS_API_KEY`) to persist keys across free-tier restarts.
+
+**Frontend (Vercel):**
+1. Deploy the `frontend` directory to Vercel.
+2. In Vercel Project Settings > Environment Variables, add `NEXT_PUBLIC_API_URL` and set it to your live Render backend URL (e.g. `https://shortsmania-api.onrender.com/api/v1`).
+3. Deploy!
+
 ---
 
 ## 📁 Directory Structure

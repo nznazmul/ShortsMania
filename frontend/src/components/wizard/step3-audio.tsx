@@ -78,7 +78,8 @@ export function Step3Audio({ formData, updateForm, onNext, onBack }: Step3Props)
 
     setPlayingBgmId(track.id);
     if (bgmAudioRef.current) {
-      bgmAudioRef.current.src = `http://127.0.0.1:8000/api/v1/media/bgm/${track.id}.mp3`;
+      const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000/api/v1";
+      bgmAudioRef.current.src = `${apiBase}/media/bgm/${track.id}.mp3`;
       bgmAudioRef.current.volume = formData.bgm_volume;
       bgmAudioRef.current.play();
       bgmAudioRef.current.onended = () => setPlayingBgmId(null);

@@ -22,6 +22,22 @@ class MediaService:
         if pixabay_key is not None:
             self.pixabay_key = pixabay_key
 
+    def _is_valid_video_file(self, file_path: str) -> bool:
+        """Verifies that a video file exists, is non-empty, and can be read by FFmpeg."""
+        if not os.path.exists(file_path) or os.path.getsize(file_path) < 20000:
+            return False
+        ffmpeg_bin = settings.find_ffmpeg()
+        cmd = [ffmpeg_bin, "-v", "error", "-i", file_path, "-t", "1", "-f", "null", "-"]
+        try:
+            res = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, timeout=5)
+            if res.returncode == 0:
+                return True
+            logger.warning(f"Video file {file_path} failed FFmpeg validation: {res.stderr}")
+            return False
+        except Exception as e:
+            logger.warning(f"Validation exception for {file_path}: {e}")
+            return False
+
     async def fetch_scene_footage(
         self,
         keywords: List[str],
@@ -44,21 +60,31 @@ class MediaService:
         if self.pexels_key:
             try:
                 downloaded = await self._search_and_download_pexels(search_query, orientation, output_path, duration)
-                if downloaded and os.path.exists(output_path):
+                if downloaded and self._is_valid_video_file(output_path):
                     logger.info(f"Successfully downloaded Pexels footage for scene {scene_index}")
                     return output_path
+                else:
+                    if os.path.exists(output_path):
+                        os.remove(output_path)
             except Exception as e:
                 logger.warning(f"Pexels footage search failed: {e}. Falling back...")
+                if os.path.exists(output_path):
+                    os.remove(output_path)
 
         # 2. Try Pixabay API if key provided
         if self.pixabay_key:
             try:
                 downloaded = await self._search_and_download_pixabay(search_query, orientation, output_path, duration)
-                if downloaded and os.path.exists(output_path):
+                if downloaded and self._is_valid_video_file(output_path):
                     logger.info(f"Successfully downloaded Pixabay footage for scene {scene_index}")
                     return output_path
+                else:
+                    if os.path.exists(output_path):
+                        os.remove(output_path)
             except Exception as e:
                 logger.warning(f"Pixabay footage search failed: {e}. Falling back...")
+                if os.path.exists(output_path):
+                    os.remove(output_path)
 
         # 3. Procedural Motion Background Generator (Offline Fallback Engine)
         logger.info(f"Generating procedural motion visual for scene {scene_index}")
@@ -160,14 +186,11 @@ class MediaService:
         ]
         c_bg, c_mid, c_accent = presets[seed % len(presets)]
 
-        # Procedural animated background using color source + box drawing + blur
+        # Procedural animated background (Optimized for Free Tier - removed heavy boxblur)
         filter_expr = (
             f"color=c={c_bg}:s={width}x{height}:d={duration}:r=30[bg];"
             f"color=c={c_mid}:s={width//2}x{height//2}:d={duration}:r=30[b1];"
-            f"color=c={c_accent}:s={width//3}x{height//3}:d={duration}:r=30[b2];"
-            f"[bg][b1]overlay=x='(W-w)/2 + sin(t*1.5)*200':y='(H-h)/2 + cos(t*1.2)*250'[m1];"
-            f"[m1][b2]overlay=x='(W-w)/2 + cos(t*2.0)*300':y='(H-h)/2 + sin(t*1.8)*350'[m2];"
-            f"[m2]boxblur=luma_radius=120:luma_power=3[vout]"
+            f"[bg][b1]overlay=x='(W-w)/2 + sin(t*1.5)*200':y='(H-h)/2 + cos(t*1.2)*250'[vout]"
         )
 
         cmd = [

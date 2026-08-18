@@ -10,7 +10,10 @@ export function Navbar() {
   const [isBackendOnline, setIsBackendOnline] = useState<boolean | null>(null);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/ping")
+    const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000/api/v1";
+    const pingUrl = apiBase.replace("/api/v1", "/ping");
+    
+    fetch(pingUrl)
       .then((res) => setIsBackendOnline(res.ok))
       .catch(() => setIsBackendOnline(false));
   }, []);
