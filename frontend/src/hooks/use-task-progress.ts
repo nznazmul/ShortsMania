@@ -32,7 +32,9 @@ export function useTaskProgress(taskId: string | null, onCompleted?: (task: Task
     }
 
     let isMounted = true;
-    const wsUrl = `ws://127.0.0.1:8000/api/v1/tasks/${taskId}/ws`;
+    const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000/api/v1";
+    const wsBase = apiBase.replace(/^http/, "ws");
+    const wsUrl = `${wsBase}/tasks/${taskId}/ws`;
 
     try {
       const ws = new WebSocket(wsUrl);

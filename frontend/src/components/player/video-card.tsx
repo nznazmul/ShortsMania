@@ -16,9 +16,10 @@ export function VideoCard({ task, onDelete }: VideoCardProps) {
   const isFailed = task.status === "failed";
   const isProcessing = task.status === "processing" || task.status === "pending";
 
+  const apiOrigin = (process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000/api/v1").replace(/\/api\/v1\/?$/, "");
   const videoUrl = task.video_url?.startsWith("http")
     ? task.video_url
-    : `http://127.0.0.1:8000${task.video_url || ""}`;
+    : `${apiOrigin}${task.video_url || ""}`;
 
   return (
     <div className="glass-card group relative flex flex-col overflow-hidden rounded-3xl border border-white/[0.08] transition hover:border-purple-500/40">

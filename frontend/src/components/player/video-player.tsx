@@ -36,9 +36,10 @@ export function VideoPlayer({ task }: VideoPlayerProps) {
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   const isVertical = task.video_aspect === "9:16";
+  const apiOrigin = (process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000/api/v1").replace(/\/api\/v1\/?$/, "");
   const videoSrc = task.video_url?.startsWith("http")
     ? task.video_url
-    : `http://127.0.0.1:8000${task.video_url || ""}`;
+    : `${apiOrigin}${task.video_url || ""}`;
 
   useEffect(() => {
     const video = videoRef.current;
