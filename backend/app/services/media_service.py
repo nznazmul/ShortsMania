@@ -54,7 +54,19 @@ class MediaService:
         Path(output_path).parent.mkdir(parents=True, exist_ok=True)
 
         orientation = "portrait" if aspect == "9:16" else "landscape"
-        search_query = " ".join(keywords[:2]) if keywords else "cinematic dark abstract"
+        
+        # Sanitize keywords to prevent massive paragraphs from crashing Pexels (400 Bad Request)
+        clean_keywords = []
+        for kw in (keywords or []):
+            # Replace newlines with space, split into actual words
+            clean_keywords.extend(kw.replace("\n", " ").split())
+            
+        # Take at most 3 words, remove weird symbols, ensure it's a clean short string
+        search_query = " ".join(clean_keywords[:3]) if clean_keywords else "cinematic dark abstract"
+        search_query = "".join(c for c in search_query if c.isalnum() or c.isspace()).strip()
+        
+        if not search_query:
+            search_query = "cinematic dark abstract"
 
         error_context = []
         
