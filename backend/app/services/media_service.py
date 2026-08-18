@@ -195,6 +195,7 @@ class MediaService:
 
         cmd = [
             ffmpeg_bin, "-y",
+            "-f", "lavfi", "-i", f"nullsrc=s={width}x{height}:d={duration}:r=30",
             "-filter_complex", filter_expr,
             "-map", "[vout]",
             "-t", str(duration),
@@ -223,7 +224,11 @@ class MediaService:
                 subprocess.run(simple_cmd, check=True, timeout=15)
         except Exception as e:
             logger.error(f"Failed to generate procedural video: {e}")
+            raise RuntimeError(f"Procedural video generator failed to create footage for scene {scene_index}. Please add a Pexels or Pixabay API key.")
 
+        if not os.path.exists(output_path) or os.path.getsize(output_path) < 1000:
+            raise RuntimeError(f"Procedural video generator output was empty or invalid for scene {scene_index}. The server might be out of memory.")
+            
         return output_path
 
 media_service = MediaService()
