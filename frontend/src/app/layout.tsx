@@ -3,9 +3,68 @@ import { Navbar } from "../components/navbar";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "ShortsMania - AI-Powered Automated Short Video Generator",
+  metadataBase: new URL("https://shortsmania.app"),
+  title: {
+    default: "ShortsMania - AI-Powered Automated Short Video Generator",
+    template: "%s | ShortsMania",
+  },
   description:
     "Generate viral, high-retention short videos for TikTok, YouTube Shorts, and Instagram Reels with AI scriptwriting, neural voiceovers, stock footage, and styled karaoke captions.",
+  keywords: [
+    "AI Video Generator",
+    "Short Video Creator",
+    "TikTok Automation",
+    "YouTube Shorts Generator",
+    "MoneyPrinterTurbo",
+    "Text to Video AI",
+    "Edge-TTS Subtitles",
+    "Auto Captions AI",
+    "Viral Reels Generator",
+  ],
+  authors: [{ name: "ShortsMania Team", url: "https://github.com/nznazmul/ShortsMania" }],
+  creator: "nznazmul",
+  publisher: "ShortsMania",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  openGraph: {
+    title: "ShortsMania - AI-Powered Automated Short Video Generator",
+    description:
+      "Automate high-retention short videos for TikTok, YouTube Shorts, and Reels with AI scriptwriting, neural voiceovers, and dynamic karaoke captions.",
+    url: "https://shortsmania.app",
+    siteName: "ShortsMania",
+    images: [
+      {
+        url: "/favicon.svg",
+        width: 1200,
+        height: 630,
+        alt: "ShortsMania - AI Short Video Generator",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ShortsMania - AI-Powered Automated Short Video Generator",
+    description:
+      "Generate viral, high-retention short videos for TikTok, YouTube Shorts, and Instagram Reels in seconds.",
+    creator: "@shortsmania",
+    images: ["/favicon.svg"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
   icons: {
     icon: [
       { url: "/favicon.svg", type: "image/svg+xml" },
