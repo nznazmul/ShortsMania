@@ -1,0 +1,26 @@
+FROM python:3.11-slim
+
+# Install system dependencies including FFmpeg and fonts
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ffmpeg \
+    fonts-liberation \
+    fonts-noto-cjk \
+    libass-dev \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Copy dependencies first for Docker layer caching
+COPY backend/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy backend application source
+COPY backend/ .
+
+# Ensure storage directories exist
+RUN mkdir -p storage/outputs storage/tasks storage/temp storage/uploads app/resources/bgm app/resources/fonts
+
+EXPOSE 8000
+
+CMD ["python", "run.py"]
