@@ -59,12 +59,12 @@ async def test_api_key(provider: str, api_key: str):
     """Tests connectivity and authentication for a specific third-party provider."""
     try:
         if provider == "gemini":
-            url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={api_key}"
+            url = f"https://generativelanguage.googleapis.com/v1beta/models?key={api_key}"
             async with httpx.AsyncClient(timeout=10.0) as client:
-                res = await client.post(url, json={"contents": [{"parts": [{"text": "ping"}]}]})
+                res = await client.get(url)
                 if res.status_code == 200:
-                    return {"valid": True, "provider": provider, "message": "Gemini API key is valid!"}
-                return {"valid": False, "provider": provider, "message": f"Gemini Error: {res.text}"}
+                    return {"valid": True, "provider": provider, "message": "Google Gemini API key is valid!"}
+                return {"valid": False, "provider": provider, "message": f"Gemini Error ({res.status_code}): {res.text[:200]}"}
 
         elif provider == "openai":
             url = "https://api.openai.com/v1/models"

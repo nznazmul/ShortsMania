@@ -65,7 +65,7 @@ class LLMService:
         language: str,
         scene_count: int
     ) -> ScriptData:
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={self.gemini_key}"
+        candidate_models = ["gemini-2.5-flash", "gemini-flash-latest", "gemini-2.0-flash", "gemini-1.5-flash", "gemini-pro"]
         system_instruction = (
             f"You are a viral short-form video scriptwriter for TikTok, YouTube Shorts, and Instagram Reels. "
             f"Write a high-retention, fast-paced script in {language} with a {tone} tone. "
@@ -86,12 +86,23 @@ class LLMService:
             }
         }
 
+        last_err = None
         async with httpx.AsyncClient(timeout=30.0) as client:
-            response = await client.post(url, json=payload)
-            response.raise_for_status()
-            data = response.json()
-            raw_text = data["candidates"][0]["content"]["parts"][0]["text"]
-            return self._parse_json_to_script(raw_text, tone, language, duration)
+            for model_name in candidate_models:
+                url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={self.gemini_key}"
+                try:
+                    response = await client.post(url, json=payload)
+                    if response.status_code == 200:
+                        data = response.json()
+                        raw_text = data["candidates"][0]["content"]["parts"][0]["text"]
+                        return self._parse_json_to_script(raw_text, tone, language, duration)
+                    else:
+                        last_err = f"{model_name} returned {response.status_code}: {response.text[:200]}"
+                except Exception as e:
+                    last_err = str(e)
+                    continue
+
+        raise RuntimeError(f"All Gemini model candidates failed: {last_err}")
 
     async def _generate_with_openai(
         self,
